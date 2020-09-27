@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
 	
 	int b, p, a, count, status, HDFtileH, HDFtileV, LX, RX, UY, LY, Albers_ULX, Albers_ULY; 
 
-    float solar_zenith, view_zenith, relative_azimuth, solar_zenith_output; //SOZ4, SEZ4, SOA4 - SEA4, solar_zenith respectively
+    double solar_zenith, view_zenith, relative_azimuth, solar_zenith_output; //SOZ4, SEZ4, SOA4 - SEA4, solar_zenith respectively
     int   Landsat_input  [NBands]; 
     int   Landsat_output [NBands]; 
     
@@ -147,7 +147,7 @@ int main(int argc, char* argv[])
     year =atoi( yearname);
     month=atoi(monthname);
     day  =atoi(  dayname);
-    printf("MODELLED_SOLAR=%d %d %d %d\n", MODELLED_SOLAR,year, month, day);
+    printf("MODELLED_SOLAR=%d %d %d %d\n", MODELLED_SOLAR, year, month, day);
     
 	//*******************************************************************************************
 	// allocate memory read tiff 
@@ -178,7 +178,6 @@ int main(int argc, char* argv[])
         ax = LX+j*PixelSize;
         ay = LY-i*PixelSize;
         
-        if (p%10000000==0) printf("line %d\n", i);
 		for (b = 0; b<NBands; b++)
 		{
 			Landsat_input[b] = Bands_2d[b][p]; // geometry and surface reflectance //int Landsat_input [6] = {200, 300, 400, 2000, 1000, 1500}; 
@@ -189,8 +188,9 @@ int main(int argc, char* argv[])
         if (MODELLED_SOLAR == 0) //default 
             solar_zenith_output = solar_zenith;
         else // modelled solar zenith in Zhang et al. (2016)
-            solar_zenith_output = get_modelled_solar_zenith(ax, ay, year, month, day);
+            get_modelled_solar_zenith(ax, ay, year, month, day, &solar_zenith_output);
          
+        // printf("line %d solar_zenith_output=%f\n", i, solar_zenith_output);
 		view_zenith  = (float)Geometry_2d[2][p] * 0.01; //SEZ4
 		relative_azimuth = ((float)Geometry_2d[1][p] - (float)Geometry_2d[3][p]) * 0.01; // SOA4 - SEA4
 		NBAR_calculate_global(Landsat_input, view_zenith, solar_zenith, relative_azimuth, solar_zenith_output, Landsat_output);// give new value to nbar
@@ -198,7 +198,9 @@ int main(int argc, char* argv[])
 		{
 			if(Bands_2d[b][p] != 20000 && Bands_2d[b][p] != -9999) {Bands_2d[b][p] = Landsat_output[b];}
 		}
-		Bands_2d[NBands-1][p] = (int)(solar_zenith_output*100+0.5);
+		// Bands_2d[NBands-1][p] = (int)(solar_zenith_output*100+0.5);
+        if (p%10000000==0) printf("line %d sz=%f, sz=%d \n", i, solar_zenith_output, Bands_2d[NBands-1][p]);
+        // break;
 	}// end loop 
 
 	//printf("%d %d %d %d %d %d \n", Landsat_output[0], Landsat_output[1], Landsat_output[2], Landsat_output[3], Landsat_output[4], Landsat_output[5]); 

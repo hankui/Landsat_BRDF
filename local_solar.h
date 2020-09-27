@@ -58,7 +58,7 @@ void SolarGeometry(int iYear, int iMonth, int iDay,
 			double *dAzimuth, double *dZenithAngle);
 
 
-double get_modelled_solar_zenith(double ax, double ay, int year, int month, int day);
+double get_modelled_solar_zenith(double ax, double ay, int year, int month, int day, double *sz);
 
 /*
 * calculate the GMT time from the local time

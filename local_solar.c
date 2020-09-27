@@ -38,7 +38,7 @@ Args:    ax-     input albers easting (x)
          ay-     input albers northing (y)
          year, month, day: acqusition date 
 *********************************************************************************/
-double get_modelled_solar_zenith(double ax, double ay, int year, int month, int day)
+double get_modelled_solar_zenith(double ax, double ay, int year, int month, int day, double *sz)
 {
     // get latitude and longitude 
     double lon, lat;
@@ -48,16 +48,19 @@ double get_modelled_solar_zenith(double ax, double ay, int year, int month, int 
     
     int idoy; 
     double dHours_gmt, dMinutes_gmt, dSecondsint_gmt;
-    getGMTtime(lon,0,Mlat_hours,
-        &idoy,&dHours_gmt, &dMinutes_gmt, &dSecondsint_gmt);
+    
+    Mlat_hours=get_poly_time(lat);
+    getGMTtime(lon,0,Mlat_hours, &idoy,&dHours_gmt, &dMinutes_gmt, &dSecondsint_gmt);
     
     // getDate(iDay_gmt,iYear,&iMonth_gmt,&iDay_gmt);
 
-    SolarGeometry(year, month, day,
-    dHours_gmt, dMinutes_gmt, dSecondsint_gmt,
-    lat, lon,&MAzimuth, &MZenithAngle);
+    // SolarGeometry(year, month, day, dHours_gmt, dMinutes_gmt, dSecondsint_gmt,
+    // lat, lon, &MAzimuth, &MZenithAngle);
+    SolarGeometry(year, month, day, dHours_gmt, dMinutes_gmt, dSecondsint_gmt,
+    lat, lon, &MAzimuth, sz);
+    // printf("lon=%f, lat=%f, local=%f, sz=%f\n", lon, lat, Mlat_hours, *sz);
     
-    return MZenithAngle;
+    return 0;
 }
 
 /*********************************************************************************
