@@ -16,6 +16,7 @@ https://www.sciencedirect.com/science/article/pii/S0034425716300220
 Zhang, H. K., Roy, D. P., & Kovalskyy, V. (2016). 
 Optimal solar geometry definition for global long-term Landsat time-series bidirectional reflectance normalization. 
 IEEE Transactions on Geoscience and Remote Sensing, 54(3), 1410-1418.
+https://ieeexplore.ieee.org/document/7295567
 
 
 
